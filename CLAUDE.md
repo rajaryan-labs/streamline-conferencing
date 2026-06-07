@@ -1,1 +1,210 @@
-@AGENTS.md
+# 🎯 Project Context — Streamline Conferencing (Zoom Clone)
+
+> This file is **auto-maintained** and committed to the repo.
+> It is designed for LLMs and developers to get instant full project context.
+> Always read this file before starting any work on this codebase.
+
+---
+
+## 📦 Tech Stack
+
+| Technology | Version | Notes |
+|---|---|---|
+| Next.js | **16.2.7** | App Router — NOT Next.js 13/14 |
+| React | **19.2.4** | Async APIs apply |
+| TypeScript | ^5 | |
+| Tailwind CSS | **v4** | `@theme` in `globals.css` — no config file |
+| Node.js | ≥18.x | |
+| OS / Shell | Windows / PowerShell | Use `;` not `&&` |
+| Repo | https://github.com/rajaryan-labs/streamline-conferencing | Branch: `main` |
+
+---
+
+## ⚠️ Critical Breaking Changes
+
+### Async Route Params (Next.js 16 + React 19)
+`params` and `searchParams` are **Promises** — must be `await`-ed:
+```tsx
+// ✅ Correct
+const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
+};
+```
+
+### Tailwind v4 Config
+No `tailwind.config.js`. Custom tokens live in `globals.css`:
+```css
+@theme inline {
+  --color-dark-1: #1c1f2e;
+  --color-dark-2: #161925;
+  --color-blue-1: #0e78f9;
+}
+```
+
+---
+
+## 🗂️ File Structure & Status
+
+```
+zoom-clone/
+├── app/
+│   ├── (auth)/
+│   │   ├── sign-in/              ← 🔴 Empty — needs page.tsx
+│   │   └── sign-up/              ← 🔴 Empty — needs page.tsx
+│   ├── (root)/
+│   │   ├── layout.tsx            ← ✅ Minimal root group wrapper
+│   │   ├── (home)/
+│   │   │   ├── layout.tsx        ← ✅ Navbar + Sidebar + content shell
+│   │   │   └── page.tsx          ← 🔴 Stub (<div>Home</div>)
+│   │   └── meeting/[id]/
+│   │       └── page.tsx          ← ✅ Async params correctly awaited
+│   ├── globals.css               ← ✅ @theme tokens + base styles
+│   └── layout.tsx                ← ✅ Root HTML, fonts, metadata
+├── components/
+│   ├── Navbar.tsx                ← 🔴 Stub — full build pending
+│   ├── Sidebar.tsx               ← ✅ Complete, active route, icons
+│   └── ui/
+│       └── button.tsx            ← ✅ CVA-based Shadcn-style button
+├── constants/
+│   └── index.ts                  ← ✅ sidebarLinks (5 nav routes)
+├── lib/
+│   └── utils.ts                  ← ✅ cn() (clsx + tailwind-merge)
+├── public/
+│   ├── icons/                    ← ✅ 19 SVG icons
+│   └── images/                   ← ✅ 5 avatars + hero-background.png
+├── AGENTS.md                     ← ✅ AI coding rules
+├── CLAUDE.md                     ← ✅ This file
+└── PUSHLOG.md                    ← ✅ Full push history
+```
+
+---
+
+## 🎨 Design System
+
+### Color Tokens
+| Token | Hex | Class | Usage |
+|---|---|---|---|
+| `dark-1` | `#1c1f2e` | `bg-dark-1` | Sidebar, cards |
+| `dark-2` | `#161925` | `bg-dark-2` | Body background |
+| `blue-1` | `#0e78f9` | `bg-blue-1` | Active states, CTAs |
+
+### Theme
+- Dark mode by default
+- Deep space color palette
+- Custom Tailwind tokens via CSS variables
+
+---
+
+## 📄 Key Implementations
+
+### `constants/index.ts` — Sidebar Links
+```typescript
+export const sidebarLinks = [
+  { label: "Home",          route: "/",             imgUrl: "/icons/Home.svg" },
+  { label: "Upcoming",      route: "/upcoming",     imgUrl: "/icons/upcoming.svg" },
+  { label: "Previous",      route: "/previous",     imgUrl: "/icons/previous.svg" },
+  { label: "Recordings",    route: "/recordings",   imgUrl: "/icons/Video.svg" },
+  { label: "Personal Room", route: "/personal-room",imgUrl: "/icons/add-personal.svg" },
+];
+```
+
+### `components/Sidebar.tsx` — Dynamic Active Nav
+```tsx
+"use client";
+import { sidebarLinks } from "@/constants";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const Sidebar = () => {
+  const pathname = usePathname();
+  return (
+    <section className="sticky left-0 top-0 flex h-screen w-fit flex-col
+      justify-between bg-dark-1 p-6 pt-28 text-white max-sm:hidden lg:w-[264px]">
+      <div className="flex flex-1 flex-col gap-6">
+        {sidebarLinks.map((link) => {
+          const isActive = pathname === link.route || pathname.startsWith(`${link.route}/`);
+          return (
+            <Link href={link.route} key={link.label}
+              className={cn("flex gap-4 items-center p-4 rounded-lg justify-start",
+                { "bg-blue-1": isActive })}>
+              <Image src={link.imgUrl} alt={link.label} width={24} height={24} />
+              <p className="text-lg font-semibold max-lg:hidden">{link.label}</p>
+            </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+};
+export default Sidebar;
+```
+
+### `app/(root)/(home)/layout.tsx` — Home Shell
+```tsx
+import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+
+const HomeLayout = ({ children }: { children: ReactNode }) => (
+  <main className="relative">
+    <Navbar />
+    <div className="flex">
+      <Sidebar />
+      <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-28 max-md:pb-14 sm:px-14">
+        <div className="w-full">{children}</div>
+      </section>
+    </div>
+  </main>
+);
+```
+
+### `lib/utils.ts` — Class Merging Utility
+```ts
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+```
+
+---
+
+## 🚧 Built vs Pending
+
+### ✅ Done
+- [x] Next.js 16.2.7 + React 19 + Tailwind v4 + TypeScript scaffolded
+- [x] Root layout with title `"Streamline Conferencing"`
+- [x] Home layout shell (Navbar + Sidebar + content area)
+- [x] `Sidebar.tsx` — dynamic active route highlighting with icons
+- [x] `constants/index.ts` — 5 sidebar navigation links
+- [x] `globals.css` — `dark-1`, `dark-2`, `blue-1` color tokens
+- [x] `meeting/[id]/page.tsx` — async params correctly implemented
+- [x] Public assets: 19 icons + 6 images
+- [x] `lib/utils.ts` — `cn()` helper
+- [x] `components/ui/button.tsx` — CVA button
+
+### 🔴 Pending
+- [ ] `Navbar.tsx` — logo, user profile, mobile menu toggle
+- [ ] Mobile Navigation — hamburger sheet/drawer
+- [ ] Home dashboard — clock, hero background, quick action buttons
+- [ ] Route pages: `/upcoming`, `/previous`, `/recordings`, `/personal-room`
+- [ ] Auth pages: `/sign-in`, `/sign-up`
+- [ ] Authentication setup (Clerk or similar)
+
+---
+
+## 🔗 Context Files
+
+| File | Purpose |
+|---|---|
+| `AGENTS.md` | AI agent coding rules & conventions |
+| `CLAUDE.md` | This file — full LLM project context |
+| `PUSHLOG.md` | Every push: commit, files changed, project state |
+| `LEARNING_LOG.md` | Personal learning journal (gitignored) |
+
+---
+
+*Last updated: 2026-06-07 — Push #3*
+*Next goal: Build Navbar + Mobile Nav + Home Dashboard*
