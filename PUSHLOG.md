@@ -14,6 +14,7 @@
 | **Framework** | Next.js 16.2.7 (App Router) |
 | **React** | 19.2.4 |
 | **Styling** | Tailwind CSS v4 (`@theme` in `globals.css`) |
+| **UI Library** | Shadcn UI (`base-nova` style, Lucide icons) |
 | **Language** | TypeScript ^5 |
 | **OS / Shell** | Windows / PowerShell (use `;` not `&&`) |
 | **Repo** | https://github.com/rajaryan-labs/streamline-conferencing |
@@ -33,16 +34,22 @@ zoom-clone/
 │   │   ├── layout.tsx            ← ✅ Minimal root group layout
 │   │   ├── (home)/
 │   │   │   ├── layout.tsx        ← ✅ Navbar + Sidebar shell
-│   │   │   └── page.tsx          ← 🔴 Stub only (<div>Home</div>)
+│   │   │   ├── page.tsx          ← ✅ Dashboard (clock, hero bg, action cards)
+│   │   │   ├── upcoming/page.tsx ← ✅ Styled stub page
+│   │   │   ├── previous/page.tsx ← ✅ Styled stub page
+│   │   │   ├── recordings/page.tsx ← ✅ Styled stub page
+│   │   │   └── personal-room/page.tsx ← ✅ Styled stub page
 │   │   └── meeting/[id]/
 │   │       └── page.tsx          ← ✅ Async params correctly awaited
 │   ├── globals.css               ← ✅ Tailwind v4 @theme tokens defined
 │   └── layout.tsx                ← ✅ Root layout, title set
 ├── components/
-│   ├── Navbar.tsx                ← 🔴 Stub only (needs full build)
+│   ├── Navbar.tsx                ← ✅ Full build (logo, avatar, mobile toggle)
+│   ├── MobileNav.tsx             ← ✅ Sheet-based mobile nav drawer
 │   ├── Sidebar.tsx               ← ✅ Fully functional with active route
 │   └── ui/
-│       └── button.tsx            ← ✅ Shadcn-style Button with CVA
+│       ├── button.tsx            ← ✅ Shadcn-style Button with CVA
+│       └── sheet.tsx             ← ✅ Shadcn Sheet component
 ├── constants/
 │   └── index.ts                  ← ✅ sidebarLinks defined
 ├── lib/
@@ -72,6 +79,7 @@ zoom-clone/
 
 ### ✅ Done
 - [x] Project scaffolded with Next.js 16.2.7, React 19, Tailwind v4, TypeScript
+- [x] Shadcn UI configured (`base-nova` style, Lucide icons, `components.json`)
 - [x] Root layout with `"Streamline Conferencing"` metadata title
 - [x] Home layout shell: `<Navbar />` + `<Sidebar />` + content area
 - [x] `Sidebar.tsx` — dynamic, client-side, active route highlighting
@@ -79,19 +87,84 @@ zoom-clone/
 - [x] `globals.css` — custom `@theme` color tokens (`dark-1`, `dark-2`, `blue-1`)
 - [x] `meeting/[id]/page.tsx` — async params correctly awaited
 - [x] Public assets: 19 icons + 6 images committed
+- [x] `components/ui/button.tsx` — CVA-based Shadcn button
 - [x] `AGENTS.md`, `CLAUDE.md`, `PUSHLOG.md` — context docs
+- [x] `Navbar.tsx` — full implementation (logo, user profile, mobile hamburger toggle)
+- [x] `MobileNav.tsx` — Sheet-based mobile navigation drawer
+- [x] `components/ui/sheet.tsx` — Shadcn Sheet component
+- [x] Home dashboard page — live clock, hero background, 4 quick action cards
+- [x] `/upcoming`, `/previous`, `/recordings`, `/personal-room` pages — styled stubs
+- [x] `README.md` — updated with full project overview
 
 ### 🔴 Pending
-- [ ] `Navbar.tsx` — full implementation (logo, user profile, mobile toggle)
-- [ ] Mobile Navigation — hamburger sheet/drawer for small screens
-- [ ] Home dashboard page — clock, hero background, quick action buttons
-- [ ] `/upcoming`, `/previous`, `/recordings`, `/personal-room` pages
 - [ ] Authentication setup (Clerk or similar)
 - [ ] `app/(auth)/sign-in/page.tsx` and `sign-up/page.tsx`
+- [ ] Meeting room functionality
+- [ ] Real-time video/audio (Stream SDK integration)
 
 ---
 
 ## 📋 Push History
+
+---
+
+### Push #5 — 2026-06-07
+**Commit**: `feat: build Navbar, MobileNav, home dashboard, and styled route pages`
+**Hash**: `(pending)`
+
+**What Changed**:
+- `Navbar.tsx` — full implementation with logo, user profile avatar, and mobile hamburger toggle
+- `MobileNav.tsx` — new Sheet-based mobile navigation drawer with sidebar links
+- `components/ui/sheet.tsx` — new Shadcn Sheet component added
+- `app/(root)/(home)/page.tsx` — home dashboard with live clock, hero background, 4 quick action cards
+- `/upcoming`, `/previous`, `/recordings`, `/personal-room` — styled stub pages
+- `README.md` — updated with full project overview and setup instructions
+- `AGENTS.md`, `CLAUDE.md`, `PUSHLOG.md` — updated context docs
+
+**Files Changed**:
+- `components/Navbar.tsx` ← modified (full build)
+- `components/MobileNav.tsx` ← new
+- `components/ui/sheet.tsx` ← new
+- `app/(root)/(home)/page.tsx` ← modified (dashboard UI)
+- `app/(root)/(home)/upcoming/page.tsx` ← modified (styled)
+- `app/(root)/(home)/previous/page.tsx` ← modified (styled)
+- `app/(root)/(home)/recordings/page.tsx` ← modified (styled)
+- `app/(root)/(home)/personal-room/page.tsx` ← modified (styled)
+- `README.md` ← modified
+- `AGENTS.md` ← modified
+- `CLAUDE.md` ← modified
+- `PUSHLOG.md` ← modified
+
+**Status After Push**: Navbar + Mobile Nav fully built. Home dashboard live. All 4 route pages styled. Auth is the next milestone.
+
+---
+
+### Push #4 — 2026-06-07
+**Commit**: `docs(context): restructure AGENTS.md, CLAUDE.md and add PUSHLOG.md for LLM continuity`
+**Hash**: `de94636`
+
+**What Changed**:
+- Fully restructured `AGENTS.md` — stack table, 8 critical rules, structure map, design tokens, conventions
+- Fully restructured `CLAUDE.md` — tech stack, breaking changes, file status, code snippets, built vs pending
+- Created `PUSHLOG.md` — committed push log for LLM/dev context continuity
+- Updated `.gitignore` — added `LEARNING_LOG.md` (personal notes, local only)
+- Added `--color-blue-1: #0e78f9` to `globals.css` `@theme` (active sidebar highlight)
+- Fixed active route detection and label spacing in `Sidebar.tsx`
+- Scaffolded 4 stub route pages: `/upcoming`, `/previous`, `/recordings`, `/personal-room`
+
+**Files Changed**:
+- `AGENTS.md` — restructured ← modified
+- `CLAUDE.md` — restructured ← modified
+- `PUSHLOG.md` ← new
+- `.gitignore` ← modified
+- `app/globals.css` ← modified (blue-1 token added)
+- `components/Sidebar.tsx` ← modified
+- `app/(root)/(home)/upcoming/page.tsx` ← new
+- `app/(root)/(home)/previous/page.tsx` ← new
+- `app/(root)/(home)/recordings/page.tsx` ← new
+- `app/(root)/(home)/personal-room/page.tsx` ← new
+
+**Status After Push**: All context docs live on GitHub. 4 dashboard routes scaffolded. `bg-blue-1` active token fixed.
 
 ---
 
@@ -150,5 +223,5 @@ zoom-clone/
 
 ---
 
-*Last updated: Push #3 — 2026-06-07*
-*Next goal: Build Navbar + Mobile Navigation + Home Dashboard*
+*Last updated: Push #5 — 2026-06-07*
+*Next goal: Authentication (Clerk) + Sign-in / Sign-up pages*

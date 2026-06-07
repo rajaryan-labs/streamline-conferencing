@@ -20,6 +20,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 | React | **19.2.4** | New async APIs apply |
 | TypeScript | ^5 | Strict mode |
 | Tailwind CSS | **v4** | No `tailwind.config.js` — uses `@theme` in CSS |
+| Shadcn UI | **base-nova** style | Configured in `components.json`. Icons via Lucide |
 | Node.js | ≥18.x | Required |
 | Shell | PowerShell (Windows) | Use `;` not `&&` |
 
@@ -173,6 +174,34 @@ import { sidebarLinks } from "@/constants";
 
 ---
 
+## 🧩 Shadcn UI
+
+### Configuration (`components.json`)
+```json
+{
+  "style": "base-nova",
+  "tailwind": { "css": "app/globals.css", "cssVariables": true },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@/components",
+    "ui": "@/components/ui",
+    "utils": "@/lib/utils",
+    "lib": "@/lib",
+    "hooks": "@/hooks"
+  }
+}
+```
+
+### Rules
+- Add new Shadcn components with: `npx shadcn@latest add <component>`
+- All generated UI components land in `components/ui/`
+- Import from the alias path: `import { Button } from "@/components/ui/button"`
+- Icons come from **Lucide React**: `import { Video, Plus } from "lucide-react"`
+- Never modify generated Shadcn files directly — extend via wrapper components instead
+- Shadcn uses **CSS variables** for theming — custom tokens in `globals.css` take priority
+
+---
+
 ## 🔄 Auto-Maintained Files
 
 | File | Updated When |
@@ -184,4 +213,4 @@ import { sidebarLinks } from "@/constants";
 
 ---
 
-*Last updated: 2026-06-07 — Push #3*
+*Last updated: 2026-06-07 — Push #4*

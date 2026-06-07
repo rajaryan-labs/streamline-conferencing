@@ -14,6 +14,7 @@
 | React | **19.2.4** | Async APIs apply |
 | TypeScript | ^5 | |
 | Tailwind CSS | **v4** | `@theme` in `globals.css` — no config file |
+| Shadcn UI | **base-nova** | `components.json` config, Lucide icons |
 | Node.js | ≥18.x | |
 | OS / Shell | Windows / PowerShell | Use `;` not `&&` |
 | Repo | https://github.com/rajaryan-labs/streamline-conferencing | Branch: `main` |
@@ -92,6 +93,26 @@ zoom-clone/
 - Dark mode by default
 - Deep space color palette
 - Custom Tailwind tokens via CSS variables
+
+---
+
+## 🧩 Shadcn UI
+
+- **Style**: `base-nova` (configured in `components.json`)
+- **Icons**: Lucide React — `import { Video, Plus } from "lucide-react"`
+- **Add components**: `npx shadcn@latest add <component>`
+- **Components land in**: `components/ui/`
+- **Import pattern**: `import { Button } from "@/components/ui/button"`
+- **Theming**: via CSS variables in `globals.css` — custom `@theme` tokens take priority
+- **Installed so far**: `button.tsx` (CVA-based)
+
+### Alias Paths (from `components.json`)
+| Alias | Resolves To |
+|---|---|
+| `@/components` | `components/` |
+| `@/components/ui` | `components/ui/` |
+| `@/lib/utils` | `lib/utils.ts` |
+| `@/hooks` | `hooks/` |
 
 ---
 
@@ -203,8 +224,9 @@ export function cn(...inputs: ClassValue[]) {
 | `CLAUDE.md` | This file — full LLM project context |
 | `PUSHLOG.md` | Every push: commit, files changed, project state |
 | `LEARNING_LOG.md` | Personal learning journal (gitignored) |
+| `components.json` | Shadcn UI component configuration |
 
 ---
 
-*Last updated: 2026-06-07 — Push #3*
-*Next goal: Build Navbar + Mobile Nav + Home Dashboard*
+*Last updated: 2026-06-07 — Push #4*
+*Next goal: Build Navbar + Mobile Navigation + Home Dashboard*
