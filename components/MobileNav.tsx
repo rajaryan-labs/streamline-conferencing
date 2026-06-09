@@ -1,30 +1,33 @@
+"use client";
+
 import React from "react";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { sidebarLinks } from "@/constants";
+import { cn } from "@/lib/utils";
 
 const MobileNav = () => {
+  const pathname = usePathname();
   return (
     <section className="w-full max-w-[264px]">
       <Sheet>
         <SheetTrigger
           render={
-            <Image
-              src="/icons/hamburger.svg"
-              width={36}
-              height={36}
-              alt="Hamburger svg"
-              className="cursor-pointer"
-            />
+            <button className="cursor-pointer sm:hidden">
+              <Image
+                src="/icons/hamburger.svg"
+                width={36}
+                height={36}
+                alt="Open navigation menu"
+              />
+            </button>
           }
         />
         <SheetContent side="left" className="border-none bg-dark-1">
@@ -41,7 +44,37 @@ const MobileNav = () => {
             </p>
           </Link>
           <div className="flex h-[calc(100vh-72px)] flex-col justify-between overflow-y-auto">
-            Hello
+            <section className="flex h-full flex-col gap-6 pt-16 text-white">
+              {sidebarLinks.map((link) => {
+                const isActive = pathname === link.route;
+
+                return (
+                  <SheetClose
+                    key={link.label}
+                    nativeButton={false}
+                    render={
+                      <Link
+                        href={link.route}
+                        className={cn(
+                          "flex gap-4 items-center p-4 rounded-lg w-full max-w-60",
+                          {
+                            "bg-blue-1": isActive,
+                          },
+                        )}
+                      >
+                        <Image
+                          src={link.imgUrl}
+                          alt={link.label}
+                          width={20}
+                          height={20}
+                        />
+                        <p className="font-semibold">{link.label}</p>
+                      </Link>
+                    }
+                  />
+                );
+              })}
+            </section>
           </div>
         </SheetContent>
       </Sheet>

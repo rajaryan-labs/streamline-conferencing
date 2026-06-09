@@ -110,7 +110,7 @@ zoom-clone/
 
 ### Push #6 — 2026-06-09
 **Commit**: `feat: improve MobileNav with hamburger trigger, logo link, and sheet content`
-**Hash**: *(pending)*
+**Hash**: `12126e7`
 
 **What Changed**:
 - `MobileNav.tsx` — replaced placeholder `SheetTrigger` with hamburger SVG image trigger; added logo + brand link inside sheet; structured scrollable nav content area
@@ -238,5 +238,24 @@ zoom-clone/
 
 ---
 
-*Last updated: Push #6 — 2026-06-09*
-*Next goal: Wire MobileNav sidebar links + Authentication (Clerk) + Sign-in / Sign-up pages*
+### Push #7 — 2026-06-09
+**Commit**: `feat: wire MobileNav sidebar links and fix Navbar positioning`
+**Hash**: *(pending)*
+
+**What Changed**:
+- `MobileNav.tsx` — `SheetTrigger` now renders with a proper `<button>` wrapper around the hamburger icon; `SheetClose` on each nav link now uses `nativeButton={false}` (correct pattern for anchor elements); sidebar links are now fully wired with active route highlighting via `usePathname`
+- `Navbar.tsx` — fixed positioning: `fixes` → `fixed` (navbar now correctly sticks to top of viewport on scroll)
+- `globals.css` — added `.flex-between` custom utility class via `@layer utilities` (`display: flex; justify-content: space-between; align-items: center`)
+
+**Files Changed**:
+- `components/MobileNav.tsx` ← modified (SheetTrigger button wrapper, SheetClose nativeButton, nav links wired)
+- `components/Navbar.tsx` ← modified (fixed positioning typo)
+- `app/globals.css` ← modified (flex-between utility added)
+- `PUSHLOG.md` ← modified
+
+**Status After Push**: MobileNav is fully functional — hamburger opens sheet, all 5 nav links work with active state, sheet closes on navigation. Navbar is fixed-positioned correctly.
+
+---
+
+*Last updated: Push #7 — 2026-06-09*
+*Next goal: Authentication (Clerk) + Sign-in / Sign-up pages*
