@@ -28,8 +28,8 @@
 zoom-clone/
 ├── app/
 │   ├── (auth)/
-│   │   ├── sign-in/              ← 🔴 Empty (needs page.tsx)
-│   │   └── sign-up/              ← 🔴 Empty (needs page.tsx)
+│   │   ├── sign-in/[[...sign-in]]/ ← ✅ Clerk SignIn page
+│   │   └── sign-up/[[...sign-up]]/ ← ✅ Clerk SignUp page
 │   ├── (root)/
 │   │   ├── layout.tsx            ← ✅ Minimal root group layout
 │   │   ├── (home)/
@@ -42,7 +42,7 @@ zoom-clone/
 │   │   └── meeting/[id]/
 │   │       └── page.tsx          ← ✅ Async params correctly awaited
 │   ├── globals.css               ← ✅ Tailwind v4 @theme tokens defined
-│   └── layout.tsx                ← ✅ Root layout, title set
+│   └── layout.tsx                ← ✅ Root layout, ClerkProvider wrapping
 ├── components/
 │   ├── Navbar.tsx                ← ✅ Full build (logo, avatar, mobile toggle)
 │   ├── MobileNav.tsx             ← ✅ Sheet-based mobile nav drawer
@@ -57,6 +57,7 @@ zoom-clone/
 ├── public/
 │   ├── icons/                    ← ✅ 19 SVG icons
 │   └── images/                   ← ✅ 5 avatars + hero-background.png
+├── proxy.ts                      ← ✅ Clerk auth proxy (Next.js 16 convention)
 ├── AGENTS.md                     ← ✅ AI agent rules & conventions
 ├── CLAUDE.md                     ← ✅ Full project context for LLMs
 ├── PUSHLOG.md                    ← ✅ This file — push history & state
@@ -96,9 +97,15 @@ zoom-clone/
 - [x] `/upcoming`, `/previous`, `/recordings`, `/personal-room` pages — styled stubs
 - [x] `README.md` — updated with full project overview
 
+- [x] Clerk authentication installed and configured
+- [x] `ClerkProvider` wrapping app in `app/layout.tsx`
+- [x] `proxy.ts` — Clerk auth proxy (Next.js 16 `proxy` file convention)
+- [x] `.env` — Clerk publishable key, secret key, and redirect URLs set
+- [x] `app/(auth)/sign-in/[[...sign-in]]/page.tsx` — Clerk `<SignIn />` page
+- [x] `app/(auth)/sign-up/[[...sign-up]]/page.tsx` — Clerk `<SignUp />` page
+- [x] `globals.css` — `.flex-center` converted from `@apply` to raw CSS
+
 ### 🔴 Pending
-- [ ] Authentication setup (Clerk or similar)
-- [ ] `app/(auth)/sign-in/page.tsx` and `sign-up/page.tsx`
 - [ ] Meeting room functionality
 - [ ] Real-time video/audio (Stream SDK integration)
 
@@ -240,7 +247,7 @@ zoom-clone/
 
 ### Push #7 — 2026-06-09
 **Commit**: `feat: wire MobileNav sidebar links and fix Navbar positioning`
-**Hash**: *(pending)*
+**Hash**: `9c14ec3`
 
 **What Changed**:
 - `MobileNav.tsx` — `SheetTrigger` now renders with a proper `<button>` wrapper around the hamburger icon; `SheetClose` on each nav link now uses `nativeButton={false}` (correct pattern for anchor elements); sidebar links are now fully wired with active route highlighting via `usePathname`
@@ -257,5 +264,29 @@ zoom-clone/
 
 ---
 
-*Last updated: Push #7 — 2026-06-09*
-*Next goal: Authentication (Clerk) + Sign-in / Sign-up pages*
+### Push #8 — 2026-06-10
+**Commit**: `feat: set up Clerk authentication, auth pages, and migrate to proxy.ts`
+
+**What Changed**:
+- `proxy.ts` — created at project root (Next.js 16: `middleware` file convention is deprecated, renamed to `proxy`)
+- `app/layout.tsx` — added `<ClerkProvider>` wrapping `{children}`
+- `.env` — added `NEXT_PUBLIC_CLERK_SIGN_IN_URL`, `NEXT_PUBLIC_CLERK_SIGN_UP_URL`, and fallback redirect URLs
+- `app/(auth)/sign-in/[[...sign-in]]/page.tsx` — new Clerk `<SignIn />` page (catch-all required by Clerk)
+- `app/(auth)/sign-up/[[...sign-up]]/page.tsx` — new Clerk `<SignUp />` page
+- `app/globals.css` — `.flex-center` rewritten from `@apply` to explicit CSS for consistency with `.flex-between`
+
+**Files Changed**:
+- `proxy.ts` ← new
+- `app/layout.tsx` ← modified
+- `.env` ← modified
+- `app/(auth)/sign-in/[[...sign-in]]/page.tsx` ← new
+- `app/(auth)/sign-up/[[...sign-up]]/page.tsx` ← new
+- `app/globals.css` ← modified
+- `PUSHLOG.md` ← modified
+
+**Status After Push**: Clerk fully wired. Auth pages live. `proxy.ts` running with no deprecation warnings. Next: Stream SDK for real-time video/audio.
+
+---
+
+*Last updated: Push #8 — 2026-06-10*
+*Next goal: Stream SDK integration for real-time video/audio*
