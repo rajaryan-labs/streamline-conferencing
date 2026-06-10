@@ -288,5 +288,24 @@ zoom-clone/
 
 ---
 
-*Last updated: Push #8 — 2026-06-10*
+### Push #9 — 2026-06-11
+**Commit**: `fix: await auth.protect() in clerkMiddleware for Clerk v7 async API`
+**Hash**: `b4aa50b`
+
+**What Changed**:
+- `proxy.ts` — middleware callback made `async`; `auth.protect()` now correctly `await`ed
+- `LEARNING_LOG.md` — new entry documenting the silent Clerk v7 async breaking change
+
+**Root Cause**: In Clerk v7, `auth.protect()` is async. Without `await`, the returned promise was silently discarded — protected routes were accessible without login and **no error was thrown**.
+
+**Files Changed**:
+- `proxy.ts` ← modified (`async` callback + `await auth.protect()`)
+- `LEARNING_LOG.md` ← modified (new entry)
+- `PUSHLOG.md` ← modified
+
+**Status After Push**: Route protection fully working. Visiting `/`, `/upcoming`, `/meeting/*` etc. without login now correctly redirects to `/sign-in`.
+
+---
+
+*Last updated: Push #9 — 2026-06-11*
 *Next goal: Stream SDK integration for real-time video/audio*
