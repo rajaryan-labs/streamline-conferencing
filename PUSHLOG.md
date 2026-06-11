@@ -307,5 +307,19 @@ zoom-clone/
 
 ---
 
-*Last updated: Push #9 — 2026-06-11*
+### Push #10 — 2026-06-11
+**Commit**: `feat: update Navbar with Clerk Show component for conditional auth UI`
+
+**What Changed**:
+- `components/Navbar.tsx` — replaced static avatar placeholder with Clerk's `<Show>` component for conditional rendering; `<SignInButton />` and `<SignUpButton />` shown when signed out; `<UserButton />` shown when signed in
+
+**Files Changed**:
+- `components/Navbar.tsx` ← modified (Clerk Show, SignInButton, SignUpButton, UserButton)
+- `PUSHLOG.md` ← modified
+
+**Status After Push**: Navbar now dynamically shows auth controls based on Clerk session state. Signed-out users see sign-in/sign-up buttons; signed-in users see the user avatar/menu.
+
+---
+
+*Last updated: Push #10 — 2026-06-11*
 *Next goal: Stream SDK integration for real-time video/audio*
